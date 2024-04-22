@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using RepositoryPattern.Implementations.Commands.CreateStudent;
+using RepositoryPattern.Implementations.Commands.DeleteStudent;
+using RepositoryPattern.Implementations.Commands.UpdateStudent;
+using RepositoryPattern.Implementations.Queries.GetStudent;
+using RepositoryPattern.Implementations.Queries.GetStudents;
 using RepositoryPattern.Models;
 using RepositoryPattern.Repositories;
 using RepositoryPattern.Services;
@@ -11,41 +17,43 @@ namespace RepositoryPattern.Controllers
     public class StudentController
     {
         private readonly IStudentContract _studentService;
+        private readonly IMediator mediator;
 
-        public StudentController(IStudentContract _studentService)
+        public StudentController(IStudentContract _studentService,IMediator mediator)
         {
             this._studentService = _studentService;
+            this.mediator = mediator;
         }
 
         [HttpGet]
-        public Student GetStudent(int id)
+        public async Task<Student> GetStudent(int id)
         {
-            return _studentService.GetById(id);
+             return await mediator.Send(new GetStudentQuery(id));
         }
 
         [HttpGet("all")]
-        public IEnumerable<Student> GetStudents()
+        public async Task<IEnumerable<Student>> GetStudents()
         {
-            return _studentService.GetAll();
+            return await mediator.Send(new GetStudentsQuery());
+            
         }
 
         [HttpDelete]
-        public bool DeleteStudent(Student student)
+        public async Task<bool> DeleteStudent(Student student)
         {
-            return _studentService.Delete(student);
+            return await mediator.Send(new DeleteStudentCommand(student));
         }
 
         [HttpPost]
-        public bool CreateStudent(Student student)
+        public async Task<bool> CreateStudent(Student student)
         {
-             _studentService.Create(student);
-            return true;
+          return await mediator.Send(new CreateStudentCommand(student));
         }
 
         [HttpPut]
-        public bool UpdateStudent(Student student)
+        public async Task<bool> UpdateStudent(Student student)
         {
-            return _studentService.Update(student);
+            return await mediator.Send(new UpdateStudentCommand(student));
         }
 
 
