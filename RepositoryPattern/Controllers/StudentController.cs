@@ -19,7 +19,7 @@ namespace RepositoryPattern.Controllers
         private readonly IStudentContract _studentService;
         private readonly IMediator mediator;
 
-        public StudentController(IStudentContract _studentService,IMediator mediator)
+        public StudentController(IStudentContract _studentService, IMediator mediator)
         {
             this._studentService = _studentService;
             this.mediator = mediator;
@@ -28,14 +28,14 @@ namespace RepositoryPattern.Controllers
         [HttpGet]
         public async Task<Student> GetStudent(int id)
         {
-             return await mediator.Send(new GetStudentQuery(id));
+            return await mediator.Send(new GetStudentQuery(id));
         }
 
         [HttpGet("all")]
         public async Task<IEnumerable<Student>> GetStudents()
         {
             return await mediator.Send(new GetStudentsQuery());
-            
+
         }
 
         [HttpDelete]
@@ -45,9 +45,17 @@ namespace RepositoryPattern.Controllers
         }
 
         [HttpPost]
-        public async Task<bool> CreateStudent(Student student)
+        public async Task<bool> CreateStudent(CreateStudentCommand student)
         {
-          return await mediator.Send(new CreateStudentCommand(student));
+            try
+            {
+                return await mediator.Send(student);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         [HttpPut]

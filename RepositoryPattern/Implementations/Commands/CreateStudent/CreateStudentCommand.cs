@@ -3,7 +3,7 @@ using RepositoryPattern.Models;
 
 namespace RepositoryPattern.Implementations.Commands.CreateStudent
 {
-    public record CreateStudentCommand(Student student):IRequest<bool>
+    public record CreateStudentCommand(string? Name, int Age, DateTime DOB, int DepartmentId):IRequest<bool>
     {
     }
 }
