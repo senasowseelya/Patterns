@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RepositoryPattern.Models;
 using RepositoryPattern.Services;
 
@@ -14,6 +15,7 @@ namespace RepositoryPattern.Controllers
         {
             this.departmentService = departmentService;
         }
+        [Authorize]
         [HttpGet]
         public IEnumerable<Department> Get()
         {
